@@ -1,0 +1,36 @@
+; ModuleID = 'main'
+source_filename = "main"
+
+@.ext_print_format_lld = private unnamed_addr constant [6 x i8] c"%lld\0A\00"
+@.ext_print_format_lf = private unnamed_addr constant [5 x i8] c"%lf\0A\00"
+
+declare i32 @printf(i8*, ...)
+
+define internal void @echoint(i64) {
+entry:
+  %1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.ext_print_format_lld, i32 0, i32 0), i64 %0)
+  ret void
+}
+
+define internal void @echodouble(double) {
+entry:
+  %1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([5 x i8], [5 x i8]* @.ext_print_format_lf, i32 0, i32 0), double %0)
+  ret void
+}
+
+define internal i64 @main() {
+entry:
+  %0 = call double @sin(double 2.345000e+00)
+  call void @echodouble(double %0)
+  %1 = call double @cos(double 2.345000e+00)
+  call void @echodouble(double %1)
+  %2 = call double @tan(double 2.345000e+00)
+  call void @echodouble(double %2)
+  ret i64 0
+}
+
+declare double @sin(double)
+
+declare double @cos(double)
+
+declare double @tan(double)

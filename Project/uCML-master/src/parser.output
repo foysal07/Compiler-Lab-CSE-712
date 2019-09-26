@@ -1,0 +1,1764 @@
+Grammar
+
+    0 $accept: program $end
+
+    1 program: stmts
+    2        | %empty
+
+    3 stmts: stmt
+    4      | stmts stmt
+
+    5 stmt: var_decl
+    6     | func_decl
+    7     | extern_decl
+    8     | expr
+    9     | IF '(' expr ')' block
+   10     | IF '(' expr ')' block ELSE block
+   11     | FOR '(' id ':' id IN expr TO expr ')' block
+   12     | FOR '(' id ':' id IN expr TO expr BY expr ')' block
+   13     | RETURN expr
+
+   14 var_decl: id ':' id
+   15         | id ':' id '=' expr
+
+   16 func_decl: DEF id '(' ')' ':' id LAMBDA block
+   17          | DEF id '(' func_decl_args ')' ':' id LAMBDA block
+
+   18 extern_decl: EXTERN id '(' ')' ':' id
+   19            | EXTERN id '(' func_decl_args ')' ':' id
+
+   20 expr: id
+   21     | id '=' expr
+   22     | id '(' ')'
+   23     | id '(' call_args ')'
+   24     | '(' expr ')'
+   25     | numeric
+   26     | arithmetic
+   27     | comparision
+   28     | '-' expr
+
+   29 block: '{' '}'
+   30      | '{' stmts '}'
+
+   31 id: ID
+
+   32 func_decl_args: var_decl
+   33               | func_decl_args ',' var_decl
+
+   34 call_args: expr
+   35          | call_args ',' expr
+
+   36 numeric: INTEGER
+   37        | DOUBLE
+
+   38 arithmetic: expr '+' expr
+   39           | expr '-' expr
+   40           | expr '*' expr
+   41           | expr '/' expr
+   42           | expr '%' expr
+
+   43 comparision: expr EQ expr
+   44            | expr NE expr
+   45            | expr LT expr
+   46            | expr GT expr
+   47            | expr LE expr
+   48            | expr GE expr
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'%' (37) 42
+'(' (40) 9 10 11 12 16 17 18 19 22 23 24
+')' (41) 9 10 11 12 16 17 18 19 22 23 24
+'*' (42) 40
+'+' (43) 38
+',' (44) 33 35
+'-' (45) 28 39
+'/' (47) 41
+':' (58) 11 12 14 15 16 17 18 19
+'=' (61) 15 21
+'{' (123) 29 30
+'}' (125) 29 30
+error (256)
+LOW (258)
+INTEGER (259) 36
+DOUBLE (260) 37
+ID (261) 31
+IF (262) 9 10
+ELSE (263) 10
+FOR (264) 11 12
+IN (265) 11 12
+TO (266) 11 12
+BY (267) 12
+DEF (268) 16 17
+RETURN (269) 13
+EXTERN (270) 18 19
+LAMBDA (271) 16 17
+EQ (272) 43
+NE (273) 44
+LT (274) 45
+GT (275) 46
+LE (276) 47
+GE (277) 48
+HIGH (278)
+
+
+Nonterminals, with rules where they appear
+
+$accept (36)
+    on left: 0
+program (37)
+    on left: 1 2, on right: 0
+stmts (38)
+    on left: 3 4, on right: 1 4 30
+stmt (39)
+    on left: 5 6 7 8 9 10 11 12 13, on right: 3 4
+var_decl (40)
+    on left: 14 15, on right: 5 32 33
+func_decl (41)
+    on left: 16 17, on right: 6
+extern_decl (42)
+    on left: 18 19, on right: 7
+expr (43)
+    on left: 20 21 22 23 24 25 26 27 28, on right: 8 9 10 11 12 13
+    15 21 24 28 34 35 38 39 40 41 42 43 44 45 46 47 48
+block (44)
+    on left: 29 30, on right: 9 10 11 12 16 17
+id (45)
+    on left: 31, on right: 11 12 14 15 16 17 18 19 20 21 22 23
+func_decl_args (46)
+    on left: 32 33, on right: 17 19 33
+call_args (47)
+    on left: 34 35, on right: 23 35
+numeric (48)
+    on left: 36 37, on right: 25
+arithmetic (49)
+    on left: 38 39 40 41 42, on right: 26
+comparision (50)
+    on left: 43 44 45 46 47 48, on right: 27
+
+
+State 0
+
+    0 $accept: . program $end
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    IF       shift, and go to state 4
+    FOR      shift, and go to state 5
+    DEF      shift, and go to state 6
+    RETURN   shift, and go to state 7
+    EXTERN   shift, and go to state 8
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    $default  reduce using rule 2 (program)
+
+    program      go to state 11
+    stmts        go to state 12
+    stmt         go to state 13
+    var_decl     go to state 14
+    func_decl    go to state 15
+    extern_decl  go to state 16
+    expr         go to state 17
+    id           go to state 18
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 1
+
+   36 numeric: INTEGER .
+
+    $default  reduce using rule 36 (numeric)
+
+
+State 2
+
+   37 numeric: DOUBLE .
+
+    $default  reduce using rule 37 (numeric)
+
+
+State 3
+
+   31 id: ID .
+
+    $default  reduce using rule 31 (id)
+
+
+State 4
+
+    9 stmt: IF . '(' expr ')' block
+   10     | IF . '(' expr ')' block ELSE block
+
+    '('  shift, and go to state 22
+
+
+State 5
+
+   11 stmt: FOR . '(' id ':' id IN expr TO expr ')' block
+   12     | FOR . '(' id ':' id IN expr TO expr BY expr ')' block
+
+    '('  shift, and go to state 23
+
+
+State 6
+
+   16 func_decl: DEF . id '(' ')' ':' id LAMBDA block
+   17          | DEF . id '(' func_decl_args ')' ':' id LAMBDA block
+
+    ID  shift, and go to state 3
+
+    id  go to state 24
+
+
+State 7
+
+   13 stmt: RETURN . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 25
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 8
+
+   18 extern_decl: EXTERN . id '(' ')' ':' id
+   19            | EXTERN . id '(' func_decl_args ')' ':' id
+
+    ID  shift, and go to state 3
+
+    id  go to state 27
+
+
+State 9
+
+   28 expr: '-' . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 28
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 10
+
+   24 expr: '(' . expr ')'
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 29
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 11
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 30
+
+
+State 12
+
+    1 program: stmts .
+    4 stmts: stmts . stmt
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    IF       shift, and go to state 4
+    FOR      shift, and go to state 5
+    DEF      shift, and go to state 6
+    RETURN   shift, and go to state 7
+    EXTERN   shift, and go to state 8
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    $default  reduce using rule 1 (program)
+
+    stmt         go to state 31
+    var_decl     go to state 14
+    func_decl    go to state 15
+    extern_decl  go to state 16
+    expr         go to state 17
+    id           go to state 18
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 13
+
+    3 stmts: stmt .
+
+    $default  reduce using rule 3 (stmts)
+
+
+State 14
+
+    5 stmt: var_decl .
+
+    $default  reduce using rule 5 (stmt)
+
+
+State 15
+
+    6 stmt: func_decl .
+
+    $default  reduce using rule 6 (stmt)
+
+
+State 16
+
+    7 stmt: extern_decl .
+
+    $default  reduce using rule 7 (stmt)
+
+
+State 17
+
+    8 stmt: expr .
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    EQ   shift, and go to state 32
+    NE   shift, and go to state 33
+    LT   shift, and go to state 34
+    GT   shift, and go to state 35
+    LE   shift, and go to state 36
+    GE   shift, and go to state 37
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+    $default  reduce using rule 8 (stmt)
+
+
+State 18
+
+   14 var_decl: id . ':' id
+   15         | id . ':' id '=' expr
+   20 expr: id .
+   21     | id . '=' expr
+   22     | id . '(' ')'
+   23     | id . '(' call_args ')'
+
+    '('  shift, and go to state 43
+    ':'  shift, and go to state 44
+    '='  shift, and go to state 45
+
+    $default  reduce using rule 20 (expr)
+
+
+State 19
+
+   25 expr: numeric .
+
+    $default  reduce using rule 25 (expr)
+
+
+State 20
+
+   26 expr: arithmetic .
+
+    $default  reduce using rule 26 (expr)
+
+
+State 21
+
+   27 expr: comparision .
+
+    $default  reduce using rule 27 (expr)
+
+
+State 22
+
+    9 stmt: IF '(' . expr ')' block
+   10     | IF '(' . expr ')' block ELSE block
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 46
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 23
+
+   11 stmt: FOR '(' . id ':' id IN expr TO expr ')' block
+   12     | FOR '(' . id ':' id IN expr TO expr BY expr ')' block
+
+    ID  shift, and go to state 3
+
+    id  go to state 47
+
+
+State 24
+
+   16 func_decl: DEF id . '(' ')' ':' id LAMBDA block
+   17          | DEF id . '(' func_decl_args ')' ':' id LAMBDA block
+
+    '('  shift, and go to state 48
+
+
+State 25
+
+   13 stmt: RETURN expr .
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    EQ   shift, and go to state 32
+    NE   shift, and go to state 33
+    LT   shift, and go to state 34
+    GT   shift, and go to state 35
+    LE   shift, and go to state 36
+    GE   shift, and go to state 37
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+    $default  reduce using rule 13 (stmt)
+
+
+State 26
+
+   20 expr: id .
+   21     | id . '=' expr
+   22     | id . '(' ')'
+   23     | id . '(' call_args ')'
+
+    '('  shift, and go to state 43
+    '='  shift, and go to state 45
+
+    $default  reduce using rule 20 (expr)
+
+
+State 27
+
+   18 extern_decl: EXTERN id . '(' ')' ':' id
+   19            | EXTERN id . '(' func_decl_args ')' ':' id
+
+    '('  shift, and go to state 49
+
+
+State 28
+
+   28 expr: '-' expr .
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    $default  reduce using rule 28 (expr)
+
+
+State 29
+
+   24 expr: '(' expr . ')'
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    EQ   shift, and go to state 32
+    NE   shift, and go to state 33
+    LT   shift, and go to state 34
+    GT   shift, and go to state 35
+    LE   shift, and go to state 36
+    GE   shift, and go to state 37
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+    ')'  shift, and go to state 50
+
+
+State 30
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 31
+
+    4 stmts: stmts stmt .
+
+    $default  reduce using rule 4 (stmts)
+
+
+State 32
+
+   43 comparision: expr EQ . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 51
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 33
+
+   44 comparision: expr NE . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 52
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 34
+
+   45 comparision: expr LT . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 53
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 35
+
+   46 comparision: expr GT . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 54
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 36
+
+   47 comparision: expr LE . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 55
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 37
+
+   48 comparision: expr GE . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 56
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 38
+
+   38 arithmetic: expr '+' . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 57
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 39
+
+   39 arithmetic: expr '-' . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 58
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 40
+
+   40 arithmetic: expr '*' . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 59
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 41
+
+   41 arithmetic: expr '/' . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 60
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 42
+
+   42 arithmetic: expr '%' . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 61
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 43
+
+   22 expr: id '(' . ')'
+   23     | id '(' . call_args ')'
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+    ')'      shift, and go to state 62
+
+    expr         go to state 63
+    id           go to state 26
+    call_args    go to state 64
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 44
+
+   14 var_decl: id ':' . id
+   15         | id ':' . id '=' expr
+
+    ID  shift, and go to state 3
+
+    id  go to state 65
+
+
+State 45
+
+   21 expr: id '=' . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 66
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 46
+
+    9 stmt: IF '(' expr . ')' block
+   10     | IF '(' expr . ')' block ELSE block
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    EQ   shift, and go to state 32
+    NE   shift, and go to state 33
+    LT   shift, and go to state 34
+    GT   shift, and go to state 35
+    LE   shift, and go to state 36
+    GE   shift, and go to state 37
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+    ')'  shift, and go to state 67
+
+
+State 47
+
+   11 stmt: FOR '(' id . ':' id IN expr TO expr ')' block
+   12     | FOR '(' id . ':' id IN expr TO expr BY expr ')' block
+
+    ':'  shift, and go to state 68
+
+
+State 48
+
+   16 func_decl: DEF id '(' . ')' ':' id LAMBDA block
+   17          | DEF id '(' . func_decl_args ')' ':' id LAMBDA block
+
+    ID   shift, and go to state 3
+    ')'  shift, and go to state 69
+
+    var_decl        go to state 70
+    id              go to state 71
+    func_decl_args  go to state 72
+
+
+State 49
+
+   18 extern_decl: EXTERN id '(' . ')' ':' id
+   19            | EXTERN id '(' . func_decl_args ')' ':' id
+
+    ID   shift, and go to state 3
+    ')'  shift, and go to state 73
+
+    var_decl        go to state 70
+    id              go to state 71
+    func_decl_args  go to state 74
+
+
+State 50
+
+   24 expr: '(' expr ')' .
+
+    $default  reduce using rule 24 (expr)
+
+
+State 51
+
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   43            | expr EQ expr .
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+    $default  reduce using rule 43 (comparision)
+
+
+State 52
+
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   44            | expr NE expr .
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+    $default  reduce using rule 44 (comparision)
+
+
+State 53
+
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   45            | expr LT expr .
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+    $default  reduce using rule 45 (comparision)
+
+
+State 54
+
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   46            | expr GT expr .
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+    $default  reduce using rule 46 (comparision)
+
+
+State 55
+
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   47            | expr LE expr .
+   48            | expr . GE expr
+
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+    $default  reduce using rule 47 (comparision)
+
+
+State 56
+
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+   48            | expr GE expr .
+
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+    $default  reduce using rule 48 (comparision)
+
+
+State 57
+
+   38 arithmetic: expr . '+' expr
+   38           | expr '+' expr .
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+    $default  reduce using rule 38 (arithmetic)
+
+
+State 58
+
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   39           | expr '-' expr .
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+    $default  reduce using rule 39 (arithmetic)
+
+
+State 59
+
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   40           | expr '*' expr .
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    $default  reduce using rule 40 (arithmetic)
+
+
+State 60
+
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   41           | expr '/' expr .
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    $default  reduce using rule 41 (arithmetic)
+
+
+State 61
+
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   42           | expr '%' expr .
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    $default  reduce using rule 42 (arithmetic)
+
+
+State 62
+
+   22 expr: id '(' ')' .
+
+    $default  reduce using rule 22 (expr)
+
+
+State 63
+
+   34 call_args: expr .
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    EQ   shift, and go to state 32
+    NE   shift, and go to state 33
+    LT   shift, and go to state 34
+    GT   shift, and go to state 35
+    LE   shift, and go to state 36
+    GE   shift, and go to state 37
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+    $default  reduce using rule 34 (call_args)
+
+
+State 64
+
+   23 expr: id '(' call_args . ')'
+   35 call_args: call_args . ',' expr
+
+    ')'  shift, and go to state 75
+    ','  shift, and go to state 76
+
+
+State 65
+
+   14 var_decl: id ':' id .
+   15         | id ':' id . '=' expr
+
+    '='  shift, and go to state 77
+
+    $default  reduce using rule 14 (var_decl)
+
+
+State 66
+
+   21 expr: id '=' expr .
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    EQ   shift, and go to state 32
+    NE   shift, and go to state 33
+    LT   shift, and go to state 34
+    GT   shift, and go to state 35
+    LE   shift, and go to state 36
+    GE   shift, and go to state 37
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+    $default  reduce using rule 21 (expr)
+
+
+State 67
+
+    9 stmt: IF '(' expr ')' . block
+   10     | IF '(' expr ')' . block ELSE block
+
+    '{'  shift, and go to state 78
+
+    block  go to state 79
+
+
+State 68
+
+   11 stmt: FOR '(' id ':' . id IN expr TO expr ')' block
+   12     | FOR '(' id ':' . id IN expr TO expr BY expr ')' block
+
+    ID  shift, and go to state 3
+
+    id  go to state 80
+
+
+State 69
+
+   16 func_decl: DEF id '(' ')' . ':' id LAMBDA block
+
+    ':'  shift, and go to state 81
+
+
+State 70
+
+   32 func_decl_args: var_decl .
+
+    $default  reduce using rule 32 (func_decl_args)
+
+
+State 71
+
+   14 var_decl: id . ':' id
+   15         | id . ':' id '=' expr
+
+    ':'  shift, and go to state 44
+
+
+State 72
+
+   17 func_decl: DEF id '(' func_decl_args . ')' ':' id LAMBDA block
+   33 func_decl_args: func_decl_args . ',' var_decl
+
+    ')'  shift, and go to state 82
+    ','  shift, and go to state 83
+
+
+State 73
+
+   18 extern_decl: EXTERN id '(' ')' . ':' id
+
+    ':'  shift, and go to state 84
+
+
+State 74
+
+   19 extern_decl: EXTERN id '(' func_decl_args . ')' ':' id
+   33 func_decl_args: func_decl_args . ',' var_decl
+
+    ')'  shift, and go to state 85
+    ','  shift, and go to state 83
+
+
+State 75
+
+   23 expr: id '(' call_args ')' .
+
+    $default  reduce using rule 23 (expr)
+
+
+State 76
+
+   35 call_args: call_args ',' . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 86
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 77
+
+   15 var_decl: id ':' id '=' . expr
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 87
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 78
+
+   29 block: '{' . '}'
+   30      | '{' . stmts '}'
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    IF       shift, and go to state 4
+    FOR      shift, and go to state 5
+    DEF      shift, and go to state 6
+    RETURN   shift, and go to state 7
+    EXTERN   shift, and go to state 8
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+    '}'      shift, and go to state 88
+
+    stmts        go to state 89
+    stmt         go to state 13
+    var_decl     go to state 14
+    func_decl    go to state 15
+    extern_decl  go to state 16
+    expr         go to state 17
+    id           go to state 18
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 79
+
+    9 stmt: IF '(' expr ')' block .
+   10     | IF '(' expr ')' block . ELSE block
+
+    ELSE  shift, and go to state 90
+
+    $default  reduce using rule 9 (stmt)
+
+
+State 80
+
+   11 stmt: FOR '(' id ':' id . IN expr TO expr ')' block
+   12     | FOR '(' id ':' id . IN expr TO expr BY expr ')' block
+
+    IN  shift, and go to state 91
+
+
+State 81
+
+   16 func_decl: DEF id '(' ')' ':' . id LAMBDA block
+
+    ID  shift, and go to state 3
+
+    id  go to state 92
+
+
+State 82
+
+   17 func_decl: DEF id '(' func_decl_args ')' . ':' id LAMBDA block
+
+    ':'  shift, and go to state 93
+
+
+State 83
+
+   33 func_decl_args: func_decl_args ',' . var_decl
+
+    ID  shift, and go to state 3
+
+    var_decl  go to state 94
+    id        go to state 71
+
+
+State 84
+
+   18 extern_decl: EXTERN id '(' ')' ':' . id
+
+    ID  shift, and go to state 3
+
+    id  go to state 95
+
+
+State 85
+
+   19 extern_decl: EXTERN id '(' func_decl_args ')' . ':' id
+
+    ':'  shift, and go to state 96
+
+
+State 86
+
+   35 call_args: call_args ',' expr .
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    EQ   shift, and go to state 32
+    NE   shift, and go to state 33
+    LT   shift, and go to state 34
+    GT   shift, and go to state 35
+    LE   shift, and go to state 36
+    GE   shift, and go to state 37
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+    $default  reduce using rule 35 (call_args)
+
+
+State 87
+
+   15 var_decl: id ':' id '=' expr .
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    EQ   shift, and go to state 32
+    NE   shift, and go to state 33
+    LT   shift, and go to state 34
+    GT   shift, and go to state 35
+    LE   shift, and go to state 36
+    GE   shift, and go to state 37
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+    $default  reduce using rule 15 (var_decl)
+
+
+State 88
+
+   29 block: '{' '}' .
+
+    $default  reduce using rule 29 (block)
+
+
+State 89
+
+    4 stmts: stmts . stmt
+   30 block: '{' stmts . '}'
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    IF       shift, and go to state 4
+    FOR      shift, and go to state 5
+    DEF      shift, and go to state 6
+    RETURN   shift, and go to state 7
+    EXTERN   shift, and go to state 8
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+    '}'      shift, and go to state 97
+
+    stmt         go to state 31
+    var_decl     go to state 14
+    func_decl    go to state 15
+    extern_decl  go to state 16
+    expr         go to state 17
+    id           go to state 18
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 90
+
+   10 stmt: IF '(' expr ')' block ELSE . block
+
+    '{'  shift, and go to state 78
+
+    block  go to state 98
+
+
+State 91
+
+   11 stmt: FOR '(' id ':' id IN . expr TO expr ')' block
+   12     | FOR '(' id ':' id IN . expr TO expr BY expr ')' block
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 99
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 92
+
+   16 func_decl: DEF id '(' ')' ':' id . LAMBDA block
+
+    LAMBDA  shift, and go to state 100
+
+
+State 93
+
+   17 func_decl: DEF id '(' func_decl_args ')' ':' . id LAMBDA block
+
+    ID  shift, and go to state 3
+
+    id  go to state 101
+
+
+State 94
+
+   33 func_decl_args: func_decl_args ',' var_decl .
+
+    $default  reduce using rule 33 (func_decl_args)
+
+
+State 95
+
+   18 extern_decl: EXTERN id '(' ')' ':' id .
+
+    $default  reduce using rule 18 (extern_decl)
+
+
+State 96
+
+   19 extern_decl: EXTERN id '(' func_decl_args ')' ':' . id
+
+    ID  shift, and go to state 3
+
+    id  go to state 102
+
+
+State 97
+
+   30 block: '{' stmts '}' .
+
+    $default  reduce using rule 30 (block)
+
+
+State 98
+
+   10 stmt: IF '(' expr ')' block ELSE block .
+
+    $default  reduce using rule 10 (stmt)
+
+
+State 99
+
+   11 stmt: FOR '(' id ':' id IN expr . TO expr ')' block
+   12     | FOR '(' id ':' id IN expr . TO expr BY expr ')' block
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    TO   shift, and go to state 103
+    EQ   shift, and go to state 32
+    NE   shift, and go to state 33
+    LT   shift, and go to state 34
+    GT   shift, and go to state 35
+    LE   shift, and go to state 36
+    GE   shift, and go to state 37
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+
+
+State 100
+
+   16 func_decl: DEF id '(' ')' ':' id LAMBDA . block
+
+    '{'  shift, and go to state 78
+
+    block  go to state 104
+
+
+State 101
+
+   17 func_decl: DEF id '(' func_decl_args ')' ':' id . LAMBDA block
+
+    LAMBDA  shift, and go to state 105
+
+
+State 102
+
+   19 extern_decl: EXTERN id '(' func_decl_args ')' ':' id .
+
+    $default  reduce using rule 19 (extern_decl)
+
+
+State 103
+
+   11 stmt: FOR '(' id ':' id IN expr TO . expr ')' block
+   12     | FOR '(' id ':' id IN expr TO . expr BY expr ')' block
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 106
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 104
+
+   16 func_decl: DEF id '(' ')' ':' id LAMBDA block .
+
+    $default  reduce using rule 16 (func_decl)
+
+
+State 105
+
+   17 func_decl: DEF id '(' func_decl_args ')' ':' id LAMBDA . block
+
+    '{'  shift, and go to state 78
+
+    block  go to state 107
+
+
+State 106
+
+   11 stmt: FOR '(' id ':' id IN expr TO expr . ')' block
+   12     | FOR '(' id ':' id IN expr TO expr . BY expr ')' block
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    BY   shift, and go to state 108
+    EQ   shift, and go to state 32
+    NE   shift, and go to state 33
+    LT   shift, and go to state 34
+    GT   shift, and go to state 35
+    LE   shift, and go to state 36
+    GE   shift, and go to state 37
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+    ')'  shift, and go to state 109
+
+
+State 107
+
+   17 func_decl: DEF id '(' func_decl_args ')' ':' id LAMBDA block .
+
+    $default  reduce using rule 17 (func_decl)
+
+
+State 108
+
+   12 stmt: FOR '(' id ':' id IN expr TO expr BY . expr ')' block
+
+    INTEGER  shift, and go to state 1
+    DOUBLE   shift, and go to state 2
+    ID       shift, and go to state 3
+    '-'      shift, and go to state 9
+    '('      shift, and go to state 10
+
+    expr         go to state 110
+    id           go to state 26
+    numeric      go to state 19
+    arithmetic   go to state 20
+    comparision  go to state 21
+
+
+State 109
+
+   11 stmt: FOR '(' id ':' id IN expr TO expr ')' . block
+
+    '{'  shift, and go to state 78
+
+    block  go to state 111
+
+
+State 110
+
+   12 stmt: FOR '(' id ':' id IN expr TO expr BY expr . ')' block
+   38 arithmetic: expr . '+' expr
+   39           | expr . '-' expr
+   40           | expr . '*' expr
+   41           | expr . '/' expr
+   42           | expr . '%' expr
+   43 comparision: expr . EQ expr
+   44            | expr . NE expr
+   45            | expr . LT expr
+   46            | expr . GT expr
+   47            | expr . LE expr
+   48            | expr . GE expr
+
+    EQ   shift, and go to state 32
+    NE   shift, and go to state 33
+    LT   shift, and go to state 34
+    GT   shift, and go to state 35
+    LE   shift, and go to state 36
+    GE   shift, and go to state 37
+    '+'  shift, and go to state 38
+    '-'  shift, and go to state 39
+    '*'  shift, and go to state 40
+    '/'  shift, and go to state 41
+    '%'  shift, and go to state 42
+    ')'  shift, and go to state 112
+
+
+State 111
+
+   11 stmt: FOR '(' id ':' id IN expr TO expr ')' block .
+
+    $default  reduce using rule 11 (stmt)
+
+
+State 112
+
+   12 stmt: FOR '(' id ':' id IN expr TO expr BY expr ')' . block
+
+    '{'  shift, and go to state 78
+
+    block  go to state 113
+
+
+State 113
+
+   12 stmt: FOR '(' id ':' id IN expr TO expr BY expr ')' block .
+
+    $default  reduce using rule 12 (stmt)

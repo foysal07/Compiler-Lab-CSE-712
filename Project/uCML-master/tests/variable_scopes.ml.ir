@@ -1,0 +1,57 @@
+; ModuleID = 'main'
+source_filename = "main"
+
+@.ext_print_format_lld = private unnamed_addr constant [6 x i8] c"%lld\0A\00"
+@.ext_print_format_lf = private unnamed_addr constant [5 x i8] c"%lf\0A\00"
+@var = internal global i64 0
+
+declare i32 @printf(i8*, ...)
+
+define internal void @echoint(i64) {
+entry:
+  %1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.ext_print_format_lld, i32 0, i32 0), i64 %0)
+  ret void
+}
+
+define internal void @echodouble(double) {
+entry:
+  %1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([5 x i8], [5 x i8]* @.ext_print_format_lf, i32 0, i32 0), double %0)
+  ret void
+}
+
+define internal i64 @main() {
+entry:
+  store i64 1, i64* @var
+  %0 = load i64, i64* @var
+  call void @echoint(i64 %0)
+  call void @func()
+  %1 = load i64, i64* @var
+  call void @echoint(i64 %1)
+  ret i64 0
+}
+
+define internal void @func() {
+entry:
+  %0 = load i64, i64* @var
+  call void @echoint(i64 %0)
+  %var = alloca i64
+  store i64 2, i64* %var
+  %1 = load i64, i64* %var
+  call void @echoint(i64 %1)
+  br i1 true, label %then, label %otherwise
+
+then:                                             ; preds = %entry
+  %var1 = alloca i64
+  store i64 3, i64* %var1
+  %2 = load i64, i64* %var1
+  call void @echoint(i64 %2)
+  br i1 true, label %merge, label %otherwise
+
+otherwise:                                        ; preds = %then, %entry
+  br label %merge
+
+merge:                                            ; preds = %otherwise, %then
+  %3 = load i64, i64* %var
+  call void @echoint(i64 %3)
+  ret void
+}

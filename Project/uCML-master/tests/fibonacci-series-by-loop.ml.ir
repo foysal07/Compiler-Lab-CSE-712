@@ -1,0 +1,75 @@
+; ModuleID = 'main'
+source_filename = "main"
+
+@.ext_print_format_lld = private unnamed_addr constant [6 x i8] c"%lld\0A\00"
+@.ext_print_format_lf = private unnamed_addr constant [5 x i8] c"%lf\0A\00"
+
+declare i32 @printf(i8*, ...)
+
+define internal void @echoint(i64) {
+entry:
+  %1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.ext_print_format_lld, i32 0, i32 0), i64 %0)
+  ret void
+}
+
+define internal void @echodouble(double) {
+entry:
+  %1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([5 x i8], [5 x i8]* @.ext_print_format_lf, i32 0, i32 0), double %0)
+  ret void
+}
+
+define internal i64 @main() {
+entry:
+  call void @fibonacci(i64 50)
+  ret i64 0
+}
+
+define internal void @fibonacci(i64) {
+entry:
+  %n = alloca i64
+  store i64 %0, i64* %n
+  %a = alloca i64
+  store i64 0, i64* %a
+  %b = alloca i64
+  store i64 1, i64* %b
+  %tmp = alloca i64
+  br label %init
+
+init:                                             ; preds = %entry
+  %i = alloca i64
+  store i64 0, i64* %i
+  br label %cond
+
+cond:                                             ; preds = %progress, %init
+  %1 = load i64, i64* %n
+  %2 = load i64, i64* %i
+  %3 = icmp sge i64 %2, 0
+  %4 = icmp sle i64 %2, %1
+  %5 = icmp sle i64 %2, 0
+  %6 = icmp sge i64 %2, %1
+  %7 = and i1 %5, %6
+  %8 = and i1 %3, %4
+  %9 = or i1 %8, %7
+  br i1 %9, label %loop, label %after
+
+loop:                                             ; preds = %cond
+  %10 = load i64, i64* %a
+  store i64 %10, i64* %tmp
+  call void @echoint(i64 %10)
+  %11 = load i64, i64* %a
+  %12 = load i64, i64* %b
+  %13 = add i64 %11, %12
+  store i64 %13, i64* %a
+  %14 = load i64, i64* %tmp
+  store i64 %14, i64* %b
+  br label %progress
+
+progress:                                         ; preds = %loop
+  %15 = load i64, i64* %i
+  %16 = add i64 %15, 1
+  store i64 %16, i64* %i
+  br label %cond
+
+after:                                            ; preds = %cond
+  ret void
+}

@@ -1,0 +1,5 @@
+1 & F | 1
+Resutl --> T
+
+0 | 1 & F
+Resutl --> F
